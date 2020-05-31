@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Newton and Quasi-Newton Methods | Optimisation II APPM2007</title>
+  <meta name="description" content="Course notes for Optimisation II at the University of the Witwatersrand" />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Newton and Quasi-Newton Methods | Optimisation II APPM2007" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:image" content="wits_high_def-min.png" />
+  <meta property="og:description" content="Course notes for Optimisation II at the University of the Witwatersrand" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Newton and Quasi-Newton Methods | Optimisation II APPM2007" />
+  
+  <meta name="twitter:description" content="Course notes for Optimisation II at the University of the Witwatersrand" />
+  <meta name="twitter:image" content="wits_high_def-min.png" />
+
+<meta name="author" content="Dr Matthew Woolway" />
+
+
+<meta name="date" content="2019-06-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="gradient-methods-for-unconstrained-optimisation.html">
+<link rel="next" href="direct-search-methods-for-unconstrained-optimisation.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Optimisation II</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Course Outline</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#course-structure-and-details"><i class="fa fa-check"></i>Course Structure and Details</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#course-assessment"><i class="fa fa-check"></i>Course Assessment</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#course-topics"><i class="fa fa-check"></i>Course Topics</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#hardware-requirements"><i class="fa fa-check"></i>Hardware Requirements</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html"><i class="fa fa-check"></i><b>1</b> Definition and General Concepts</a><ul>
+<li class="chapter" data-level="1.1" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#nonlinear-optimisation"><i class="fa fa-check"></i><b>1.1</b> Nonlinear Optimisation</a></li>
+<li class="chapter" data-level="1.2" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#general-statement-of-a-optimisation-problem"><i class="fa fa-check"></i><b>1.2</b> General Statement of a Optimisation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#important-optimisation-concepts"><i class="fa fa-check"></i><b>1.3</b> Important Optimisation Concepts</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#definitions"><i class="fa fa-check"></i><b>1.3.1</b> Definitions</a></li>
+<li class="chapter" data-level="1.3.2" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#convexity"><i class="fa fa-check"></i><b>1.3.2</b> Convexity</a></li>
+<li class="chapter" data-level="1.3.3" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#exercises"><i class="fa fa-check"></i><b>1.3.3</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html"><i class="fa fa-check"></i><b>2</b> One Dimensional Unconstrained and Bound Constrained Problems</a><ul>
+<li class="chapter" data-level="2.1" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html#unimodal-and-multimodal"><i class="fa fa-check"></i><b>2.1</b> Unimodal and Multimodal</a></li>
+<li class="chapter" data-level="2.2" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html#convex-functions"><i class="fa fa-check"></i><b>2.2</b> Convex Functions</a></li>
+<li class="chapter" data-level="2.3" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html#global-extrema"><i class="fa fa-check"></i><b>2.3</b> Global Extrema</a></li>
+<li class="chapter" data-level="2.4" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html#necessary-and-sufficient-conditions"><i class="fa fa-check"></i><b>2.4</b> Necessary and Sufficient Conditions</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html#exercises-1"><i class="fa fa-check"></i><b>2.4.1</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="numerical-solutions-to-nonlinear-equations.html"><a href="numerical-solutions-to-nonlinear-equations.html"><i class="fa fa-check"></i><b>3</b> Numerical Solutions to Nonlinear Equations</a><ul>
+<li class="chapter" data-level="3.1" data-path="numerical-solutions-to-nonlinear-equations.html"><a href="numerical-solutions-to-nonlinear-equations.html#newtons-method"><i class="fa fa-check"></i><b>3.1</b> Newton’s Method</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="numerical-solutions-to-nonlinear-equations.html"><a href="numerical-solutions-to-nonlinear-equations.html#advantages-and-disadvantages-of-newtons-method"><i class="fa fa-check"></i><b>3.1.1</b> Advantages and Disadvantages of Newton’s Method</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="numerical-solutions-to-nonlinear-equations.html"><a href="numerical-solutions-to-nonlinear-equations.html#secant-method"><i class="fa fa-check"></i><b>3.2</b> Secant Method</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="numerical-solutions-to-nonlinear-equations.html"><a href="numerical-solutions-to-nonlinear-equations.html#exercises-2"><i class="fa fa-check"></i><b>3.2.1</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="numerical-optimisation-of-univariate-functions.html"><a href="numerical-optimisation-of-univariate-functions.html"><i class="fa fa-check"></i><b>4</b> Numerical Optimisation of Univariate Functions</a><ul>
+<li class="chapter" data-level="4.1" data-path="numerical-optimisation-of-univariate-functions.html"><a href="numerical-optimisation-of-univariate-functions.html#techniques-using-function-evaluations"><i class="fa fa-check"></i><b>4.1</b> Techniques Using Function Evaluations</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="numerical-optimisation-of-univariate-functions.html"><a href="numerical-optimisation-of-univariate-functions.html#bisection-method"><i class="fa fa-check"></i><b>4.1.1</b> Bisection Method</a></li>
+<li class="chapter" data-level="4.1.2" data-path="numerical-optimisation-of-univariate-functions.html"><a href="numerical-optimisation-of-univariate-functions.html#golden-search-method"><i class="fa fa-check"></i><b>4.1.2</b> Golden Search Method</a></li>
+<li class="chapter" data-level="4.1.3" data-path="numerical-optimisation-of-univariate-functions.html"><a href="numerical-optimisation-of-univariate-functions.html#exercises-3"><i class="fa fa-check"></i><b>4.1.3</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html"><i class="fa fa-check"></i><b>5</b> Multivariate Unconstrained Optimisation</a><ul>
+<li class="chapter" data-level="5.1" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#terminology-for-functions-of-several-variables"><i class="fa fa-check"></i><b>5.1</b> Terminology for Functions of Several Variables</a></li>
+<li class="chapter" data-level="5.2" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#a-line-in-a-particular-direction-in-the-context-of-optimisation"><i class="fa fa-check"></i><b>5.2</b> A Line in a Particular Direction in the Context of Optimisation</a></li>
+<li class="chapter" data-level="5.3" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#taylor-series-for-multivariate-function"><i class="fa fa-check"></i><b>5.3</b> Taylor Series for Multivariate Function</a></li>
+<li class="chapter" data-level="5.4" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#quadratic-forms"><i class="fa fa-check"></i><b>5.4</b> Quadratic Forms</a></li>
+<li class="chapter" data-level="5.5" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#stationary-points"><i class="fa fa-check"></i><b>5.5</b> Stationary Points</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#tests-for-positive-definiteness"><i class="fa fa-check"></i><b>5.5.1</b> Tests for Positive Definiteness</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#necessary-and-sufficient-conditions-1"><i class="fa fa-check"></i><b>5.6</b> Necessary and Sufficient Conditions</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#exercises-4"><i class="fa fa-check"></i><b>5.6.1</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html"><i class="fa fa-check"></i><b>6</b> Gradient Methods for Unconstrained Optimisation</a><ul>
+<li class="chapter" data-level="6.1" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#general-line-search-techniques-used-in-unconstrained-multivariate-minimisation"><i class="fa fa-check"></i><b>6.1</b> General Line Search Techniques used in Unconstrained Multivariate Minimisation</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#challenges-in-computing-step-length-alphak"><i class="fa fa-check"></i><b>6.1.1</b> Challenges in Computing Step Length <span class="math inline">\(\alpha^k\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#exact-and-inexact-line-search"><i class="fa fa-check"></i><b>6.2</b> Exact and Inexact Line Search</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#algorithmic-structure"><i class="fa fa-check"></i><b>6.2.1</b> Algorithmic Structure</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#the-descent-condition"><i class="fa fa-check"></i><b>6.3</b> The Descent Condition</a></li>
+<li class="chapter" data-level="6.4" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#the-direction-of-greatest-reduction"><i class="fa fa-check"></i><b>6.4</b> The Direction of Greatest Reduction</a></li>
+<li class="chapter" data-level="6.5" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#the-method-of-steepest-descent"><i class="fa fa-check"></i><b>6.5</b> The Method of Steepest Descent</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#steepest-descent-algorithm"><i class="fa fa-check"></i><b>6.5.1</b> Steepest Descent Algorithm</a></li>
+<li class="chapter" data-level="6.5.2" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#convergence-criteria"><i class="fa fa-check"></i><b>6.5.2</b> Convergence Criteria</a></li>
+<li class="chapter" data-level="6.5.3" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#inexact-line-search"><i class="fa fa-check"></i><b>6.5.3</b> Inexact Line Search</a></li>
+<li class="chapter" data-level="6.5.4" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#exercises-5"><i class="fa fa-check"></i><b>6.5.4</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#the-gradient-descent-algorithm-and-machine-learning"><i class="fa fa-check"></i><b>6.6</b> The Gradient Descent Algorithm and Machine Learning</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#basic-example"><i class="fa fa-check"></i><b>6.6.1</b> Basic Example</a></li>
+<li class="chapter" data-level="6.6.2" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#adaptive-step-size"><i class="fa fa-check"></i><b>6.6.2</b> Adaptive Step-Size</a></li>
+<li class="chapter" data-level="6.6.3" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#decreasing-step-size"><i class="fa fa-check"></i><b>6.6.3</b> Decreasing Step-Size</a></li>
+<li class="chapter" data-level="6.6.4" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#stochastic-gradient-descent"><i class="fa fa-check"></i><b>6.6.4</b> Stochastic Gradient Descent</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html"><i class="fa fa-check"></i><b>7</b> Newton and Quasi-Newton Methods</a><ul>
+<li class="chapter" data-level="7.1" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html#the-modified-newton-method"><i class="fa fa-check"></i><b>7.1</b> The Modified Newton Method</a></li>
+<li class="chapter" data-level="7.2" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html#convergence-of-newtons-method-for-quadratic-functions"><i class="fa fa-check"></i><b>7.2</b> Convergence of Newton’s Method for Quadratic Functions</a></li>
+<li class="chapter" data-level="7.3" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html#quasi-newton-methods"><i class="fa fa-check"></i><b>7.3</b> Quasi-Newton Methods</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html#the-dfp-quasi-newton-method"><i class="fa fa-check"></i><b>7.3.1</b> The DFP Quasi-Newton Method</a></li>
+<li class="chapter" data-level="7.3.2" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html#exercises-6"><i class="fa fa-check"></i><b>7.3.2</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="direct-search-methods-for-unconstrained-optimisation.html"><a href="direct-search-methods-for-unconstrained-optimisation.html"><i class="fa fa-check"></i><b>8</b> Direct Search Methods for Unconstrained Optimisation</a><ul>
+<li class="chapter" data-level="8.1" data-path="direct-search-methods-for-unconstrained-optimisation.html"><a href="direct-search-methods-for-unconstrained-optimisation.html#random-walk-method"><i class="fa fa-check"></i><b>8.1</b> Random Walk Method</a></li>
+<li class="chapter" data-level="8.2" data-path="direct-search-methods-for-unconstrained-optimisation.html"><a href="direct-search-methods-for-unconstrained-optimisation.html#downhill-simplex-method-of-nelder-and-mead"><i class="fa fa-check"></i><b>8.2</b> Downhill Simplex Method of Nelder and Mead</a></li>
+<li class="chapter" data-level="8.3" data-path="direct-search-methods-for-unconstrained-optimisation.html"><a href="direct-search-methods-for-unconstrained-optimisation.html#rosenbrock-function-example"><i class="fa fa-check"></i><b>8.3</b> Rosenbrock Function Example</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="direct-search-methods-for-unconstrained-optimisation.html"><a href="direct-search-methods-for-unconstrained-optimisation.html#exercises-7"><i class="fa fa-check"></i><b>8.3.1</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="lagrangian-multipliers-for-constraint-optimisation.html"><a href="lagrangian-multipliers-for-constraint-optimisation.html"><i class="fa fa-check"></i><b>9</b> Lagrangian Multipliers for Constraint Optimisation</a><ul>
+<li class="chapter" data-level="9.0.1" data-path="lagrangian-multipliers-for-constraint-optimisation.html"><a href="lagrangian-multipliers-for-constraint-optimisation.html#example-12"><i class="fa fa-check"></i><b>9.0.1</b> Example</a></li>
+<li class="chapter" data-level="9.0.2" data-path="lagrangian-multipliers-for-constraint-optimisation.html"><a href="lagrangian-multipliers-for-constraint-optimisation.html#exercises-8"><i class="fa fa-check"></i><b>9.0.2</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">University of the Witwatersrand</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Optimisation II APPM2007</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="newton-and-quasi-newton-methods" class="section level1">
+<h1><span class="header-section-number">Chapter 7</span> Newton and Quasi-Newton Methods</h1>
+<p>The steepest descent method uses information based only on the first partial derivatives in selecting a suitable search direction. This strategy is not always the most effective. A faster method may be obtained by approximating the objective function <span class="math inline">\(f(\mathbf{x})\)</span> as a quadratic <span class="math inline">\(q(\mathbf{x})\)</span> and making use of a knowledge of the second partial derivatives. This is the basis of Newton’s method. The idea behind this method is as follows. Given a starting point, we construct a quadratic approximation to the objective function that matches the first and the second derivative of the original objective function at that point. We then minimise the approximate (quadratic) function instead of the original objective function. We then use the minimiser of the quadratic function to obtain the next iterate and repeat the procedure iteratively. If the objective function is quadratic then the approximation is exact and and the method yields the true minimiser in one step. If, on the other hand, the objective function is not quadratic, then the approximation will provide only an estimate of the position of the true minimiser.</p>
+<p>We can obtain a quadratic approximation to the given twice continuously differentiable objective function using the Taylor series expansion of <span class="math inline">\(f\)</span> about the current <span class="math inline">\(x^k\)</span>, neglecting terms of order three and the higher. Using the Taylor series expansion:
+<span class="math display">\[
+f(\mathbf{x}) \approx f(\mathbf{x}^{(k)}) + (\mathbf{x} - \mathbf{x}^{(k)})^T \mathbf{g}^{(k)} + (\mathbf{x} - \mathbf{x}^{(k)})^T H(\mathbf{x}^{(k)}) (\mathbf{x} - \mathbf{x}^{(k)}) = q(\mathbf{x}),
+\]</span>
+where <span class="math inline">\(\mathbf{g} = \nabla f\)</span> and <span class="math inline">\(H\)</span> is the Hessian matrix. The minimum of the quadratic <span class="math inline">\(q(\mathbf{x})\)</span> satisfies:
+<span class="math display">\[
+0 = \nabla q(\mathbf{x}) = \mathbf{g}^{(k)} + H(\mathbf{x}^{(k)}) (\mathbf{x} -
+\mathbf{x}^{(k)}),
+\]</span>
+or inverting:
+<span class="math display">\[
+\mathbf{x} = \mathbf{x}^{(k)} - H^{-1} (\mathbf{x}^{(k)}) \mathbf{g}^{(k)}.
+\]</span>
+Newton’s formula is:
+<span class="math display">\[\begin{equation}
+\mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - H^{-1} (\mathbf{x}^{(k)}) \mathbf{g}^{(k)}.
+\end{equation}\]</span>
+This can be rewritten as
+<span class="math display">\[\begin{equation}
+H^{(k)} \mathbf{d}^{(k)}=-\mathbf{g}^{(k)}\label{eq:newton2nd}
+\end{equation}\]</span>
+where <span class="math inline">\(\mathbf{d}^{(k)}=\mathbf{x}^{(k+1)}-\mathbf{x}^{(k)}\)</span></p>
+<blockquote>
+<p>Note to solve in 1-dimension <span class="math inline">\(g(x) = 0,\)</span> we iterate <span class="math inline">\(x_{k+1} = x_k - {g(x_k) \over g&#39;(x_k)}.\)</span> The above formula is the multidimensional extension of Newton’s method.</p>
+</blockquote>
+<blockquote>
+<p>The Method requires that <span class="math inline">\(f^k\)</span>, <span class="math inline">\(\mathbf{g}^k\)</span> and <span class="math inline">\(H^k\)</span> i.e., the function value, the gradient and the Hessian to be made available at each iterate <span class="math inline">\(\mathbf{x}^k\)</span>. Most importantly the Newton method is only well defined if the Hessian <span class="math inline">\(H^k\)</span> is positive definite. This is because only then <span class="math inline">\(q(\mathbf{x})\)</span> will have a unique minimiser. The positive definiteness of the Hessian can only be guaranteed if the starting iterate <span class="math inline">\(\mathbf{x}^0\)</span> is very near to the minimizer <span class="math inline">\(\mathbf{x}^*\)</span> of <span class="math inline">\(f(\mathbf{x})\)</span></p>
+</blockquote>
+<p>The Newton method is fast to converge when it is applied close to the minimiser. If the starting point (the initial point) is further from the minimiser then the Algorithm may not converge.</p>
+<hr />
+<div id="example-10" class="section level4">
+<h4><span class="header-section-number">7.0.0.1</span> Example</h4>
+<p>For example let us take the following example <span class="math display">\[f(x)=100(x_2-x_1^2)^2+(1-x_1)^2.\]</span></p>
+<p>Let us take <span class="math inline">\(\mathbf{x}^0= {0\choose 0}\)</span>. The gradient vector and the Hessian at <span class="math inline">\(\mathbf{x}^0\)</span> are respectively given by:
+<span class="math display">\[
+\nabla f(\mathbf{x}) = {-400 x_1 \left(x_2-x_1^2\right)-2 (1-x_1) \choose200 \left(x_2-x_1^2\right)} = -\mathbf{g},
+\]</span>
+and:
+<span class="math display">\[
+H(\mathbf{x})=\left(
+ \begin{array}{cc}
+ 800 x_1^2-400 \left(x_2-x_1^2\right)+2 &amp; -400 x_1 \\
+ -400 x_1 &amp; 200 \\
+\end{array}
+\right).
+\]</span>
+So substituting <span class="math inline">\(x^0\)</span> gives:
+<span class="math display">\[\begin{array}{cc}
+\mathbf{g}^0=(2,0)^T\ ; &amp;H^0=\left (\begin{array}{cc}
+2&amp;0\\
+0&amp;200\\
+\end{array}\right)\ .
+\end{array}\]</span>
+Now using <span class="math display">\[H^0\mathbf{d}^0=-\mathbf{g}^0,\]</span> recall that:
+<span class="math display">\[
+H^kd^k = - g^k, 
+\]</span>
+so:
+<span class="math display">\[
+H^0\mathbf{d}^0 = -\mathbf{g}^0 \Rightarrow \mathbf{d}^0 = \mathbf{g}^0(H^0)^{-1} = 
+\begin{pmatrix}
+2 \\ 0
+\end{pmatrix}
+\begin{pmatrix}
+1/2&amp;0\\
+0&amp;1/200\\
+\end{pmatrix} = 
+\begin{pmatrix}
+1 \\ 0
+\end{pmatrix}.
+\]</span>
+Recall:
+<span class="math display">\[
+\mathbf{d}^k = \mathbf{x}^{k+1} - \mathbf{x}^k \Rightarrow \mathbf{d}^0 = \mathbf{x}^{1} - \mathbf{x}^0 \Rightarrow \mathbf{x}^1 = \mathbf{d}^0 + \mathbf{x}^0
+\]</span>
+Thus:
+<span class="math display">\[
+\mathbf{x}^1={1\choose 0} + {0\choose 0}={1\choose 0}
+\]</span>
+Calculating the function value we have: <span class="math display">\[
+f(\mathbf{x}^1)=100&gt;f(\mathbf{x}^0)=1
+\]</span>
+which shows that the algorithm is diverging!</p>
+<hr />
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-56-1.png" /><!-- --></p>
+</div>
+<div id="the-modified-newton-method" class="section level2">
+<h2><span class="header-section-number">7.1</span> The Modified Newton Method</h2>
+<p>The modified Newton method is
+<span class="math display">\[\mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \alpha^k H^{-1} (\mathbf{x}^{(k)}) \mathbf{g}^{(k)}.
+\]</span>
+The step length parameter <span class="math inline">\(\alpha^k\)</span> modifies the step taken in the search direction, usually to minimize <span class="math inline">\(f(\mathbf{x}^{(k+1)}).\)</span> Newton’s method applied without this modification does not necessarily produce a decrease in <span class="math inline">\(f(\mathbf{x}^{(k+1)}),\)</span> as described by the above example.</p>
+<p>To address the drawbacks of Newton method line search is introduced where <span class="math inline">\(f^{k+1}&lt;f^k\)</span> is sought. As with the other gradient based methods the new iterate <span class="math inline">\(\mathbf{x}^{k+1}\)</span> is found by minimizing <span class="math inline">\(f\)</span> along the search direction <span class="math inline">\(\mathbf{d}^k\)</span> such that:
+<span class="math display">\[
+\mathbf{x}^{k+1}=\mathbf{x}^k+\alpha_k\mathbf{d}^k
+\]</span>
+where <span class="math inline">\(\alpha^k\)</span> is the value of <span class="math inline">\(\alpha\)</span> which minimizes <span class="math inline">\(f(\mathbf{x}^k+\alpha\mathbf{d}^k)\)</span>.</p>
+<p>Although Newton method without this modification may generate points where the function may increase (see example above), the directions generated by Newton method are initially downhill if <span class="math inline">\(H^k\)</span> is positive definite.</p>
+<div class="alert alert-info">
+<p><strong>Remarks:</strong></p>
+<ul>
+<li>Newton’s method always goes in a descent direction provided we do not go too far but sometimes Newton over-steps the mark and does not work.</li>
+<li>The drawback to the method is that evaluating <span class="math inline">\(H^{-1}\)</span> can be expensive in computational time.</li>
+</ul>
+</div>
+</div>
+<div id="convergence-of-newtons-method-for-quadratic-functions" class="section level2">
+<h2><span class="header-section-number">7.2</span> Convergence of Newton’s Method for Quadratic Functions</h2>
+<p>If <span class="math inline">\(f(\mathbf{x}) = {1\over 2} \mathbf{x}^T Q\mathbf{x} + \mathbf{x}^T\mathbf{b}+c\)</span> is a quadratic function with positive definite symmetric <span class="math inline">\(Q,\)</span> then Newton’s method reaches the minimum in 1 step irrespective of the initial starting point.</p>
+<p><strong>Proof:</strong></p>
+<p>The gradient vector <span class="math inline">\(\mathbf{g}(\mathbf{x})= \nabla f(\mathbf{x})= Q\mathbf{x}+\mathbf{b}.\)</span>
+The Hessian <span class="math inline">\(H(\mathbf{x}) = Q\)</span> and is a constant.
+Hence given <span class="math inline">\(\mathbf{x}^{(0)},\)</span></p>
+<p><span class="math display">\[\begin{array}{rcl}
+\mathbf{x}^{(1)} &amp;=&amp; \mathbf{x}^{(0)} - G^{-1} \mathbf{g}^{(0)}\\[.2cm]
+\mathbf{x}^{(1)} &amp;=&amp; \mathbf{x}^{(0)} - Q^{-1} \left(Q\mathbf{x}^{(0)} +
+\mathbf{b}\right)\\
+\mathbf{x}^{(1)} &amp;=&amp; -Q^{-1} \mathbf{b} = \mathbf{x}^*.
+\end{array}\]</span></p>
+<p>The result also works if <span class="math inline">\(Q\)</span> is negative definite resulting in a strong local maximum or <span class="math inline">\(Q\)</span> is symmetric indefinite giving <span class="math inline">\(\mathbf{x}^*\)</span> as a saddle point.</p>
+</div>
+<div id="quasi-newton-methods" class="section level2">
+<h2><span class="header-section-number">7.3</span> Quasi-Newton Methods</h2>
+<p>The basic Newton method as it stands is not suitable for a general purpose algorithm since <span class="math inline">\(H^k\)</span> may not be positive definite when <span class="math inline">\(\mathbf{x}^k\)</span> is remote from the solution. Furthermore, as we have shown in the previous example, even if <span class="math inline">\(H^k\)</span> is positive definite the convergence may not occur. To address these issues Quasi-Newton algorithms were developed. We start by describing the drawbacks of the Newton method. At each iteration (say, at the <span class="math inline">\(k\)</span>-th iteration) of the Newton’s method a new matrix <span class="math inline">\(H^k\)</span> has to be calculated (even if the
+method uses line search) and then either the inverse of this matrix has to found or a system of equation has
+to be solved before the new point <span class="math inline">\(\mathbf{x}^{(k+1)}\)</span> is found using <span class="math inline">\(\mathbf{x}^{(k+1)}=\mathbf{x}^{(k)}+\mathbf{d}^{(k)}\)</span>. Quasi-Newton methods avoid the calculation of a new matrix at each iteration, rather they only update the matrix (positive definite) of the previous iteration. This matrix remains also positive definite. This method also does not need to solve a system of equation. First it finds its direction using the positive definite matrix and it finds the step length using line search.</p>
+<p>Introduction of the quasi-Newton method largely increased the range of problems which could be solved. <em>This type of method is like Newton method with line search, except that <span class="math inline">\({H^k}^{-1}\)</span> at each iteration is approximated by a symmetric positive definite matrix <span class="math inline">\(G^k\)</span>, which is updated from iteration to iteration</em>. Thus the <span class="math inline">\(k\)</span>th iteration has the basic structure.</p>
+<ol style="list-style-type: decimal">
+<li>Set <span class="math inline">\(\mathbf{d}^k=-G^k\mathbf{g}^k\)</span></li>
+<li>Line search along <span class="math inline">\(\mathbf{d}^k\)</span> giving <span class="math inline">\(\mathbf{x}^{k+1}=\mathbf{x}^k+\alpha^k\mathbf{d}^k\)</span></li>
+<li>Update <span class="math inline">\(G^k\)</span> giving <span class="math inline">\(G^{k+1}\)</span></li>
+</ol>
+<p>The initial positive definite matrix is chosen as <span class="math inline">\(G^0=I\)</span>. Potential advantages of the method (as against Newton’s method) are:</p>
+<ul>
+<li>Only first derivative required (Second derivative required in Newton method)</li>
+<li><span class="math inline">\(G^k\)</span> positive definite implies the descent property (<span class="math inline">\(H^k\)</span> may be indefinite in Newton method)</li>
+</ul>
+<p>Much of the interest lies in the updating formula which enables <span class="math inline">\(G^{k+1}\)</span> to be calculated from <span class="math inline">\(G^k\)</span>. We know that for any quadratic function:
+<span class="math display">\[
+q(\mathbf{x})=\dfrac{1}{2}\mathbf{x}^TH\mathbf{x}+\mathbf{b}^T\mathbf{x}+c,
+\]</span>
+where <span class="math inline">\(H,\, \mathbf{b}\)</span> and <span class="math inline">\(c\)</span> are constant and <span class="math inline">\(H\)</span> is symmetric, the Hessian maps differences in position into differences in gradient,.i.e.,
+<span class="math display" id="eq:quasiNewton">\[\begin{equation}
+\mathbf{g}^{k+1}-\mathbf{g}^k=H(\mathbf{x}^{k+1}-\mathbf{x}^k).\tag{7.1}
+\end{equation}\]</span>
+The above property says that changes in gradient <span class="math inline">\(\mathbf{g}\)</span> (=<span class="math inline">\(\nabla f(x)\)</span>) provide information about the second derivative of <span class="math inline">\(q(\mathbf{x})\)</span> along <span class="math inline">\((\mathbf{x}^{k+1}-\mathbf{x}^k)\)</span>. In the quasi-Newton methods at <span class="math inline">\(\mathbf{x}^k\)</span> we have the information about the direction <span class="math inline">\(\mathbf{d}^k,\, G^k\)</span> and the gradient <span class="math inline">\(\mathbf{g}^k\)</span>. We can use these information to perform line search to obtain <span class="math inline">\(\mathbf{x}^{k+1}\)</span> and <span class="math inline">\(\mathbf{g}^{k+1}\)</span>. We now need to calculate <span class="math inline">\(G^{k+1}\)</span> (the approximate inverse of <span class="math inline">\(H^{k+1}\)</span>) using the above information. At this point we impose the condition given by Equation <a href="newton-and-quasi-newton-methods.html#eq:quasiNewton">(7.1)</a> for the non-quadratic function <span class="math inline">\(f\)</span>. In other words, we impose that changes in the gradient provide information about the second derivative of <span class="math inline">\(f\)</span> along the search direction <span class="math inline">\(\mathbf{d}^k\)</span>. Hence, we have:
+<span class="math display" id="eq:quasiNewton2">\[\begin{equation}
+{H^{(k+1)}}^{-1}(\mathbf{g}^{k+1}-\mathbf{g}^k)=(\mathbf{x}^{k+1}-\mathbf{x}^k)\tag{7.2}
+\end{equation}\]</span>
+Therefore, we would like have <span class="math inline">\(G^{k+1}=G^k+\Delta G^k\)</span> such that:
+<span class="math display" id="eq:quasiNewton3">\[\begin{equation}
+G^{k+1}\gamma^k=\delta^k,\tag{7.3}
+\end{equation}\]</span>
+where <span class="math inline">\(G^{k+1}={H^{k+1}}^{-1}\)</span>, <span class="math inline">\(\delta^k=(\mathbf{x}^{k+1}-\mathbf{x}^k)\)</span> and <span class="math inline">\(\gamma^k=(\mathbf{g}^{k+1}-\mathbf{g}^k)\)</span>. This is known as the <em>quasi-Newton condition</em> and for the quasi-Newton algorithm the update <span class="math inline">\(H^{k+1}\)</span> from <span class="math inline">\(H^k\)</span> must satisfy Equation <a href="newton-and-quasi-newton-methods.html#eq:quasiNewton3">(7.3)</a>.</p>
+<p>Methods differ in the way they update the matrix <span class="math inline">\(G^k\)</span>. Essentially they are classified according to a rank one and rank two updating formulae.</p>
+<div id="the-dfp-quasi-newton-method" class="section level3">
+<h3><span class="header-section-number">7.3.1</span> The DFP Quasi-Newton Method</h3>
+<p>Rank two updating formulae are given by:
+<span class="math display" id="eq:rank2">\[\begin{equation}
+G^{k+1}=G^k\gamma^k+auu^T+bvv^T\gamma^k\tag{7.4}.
+\end{equation}\]</span>
+One method is to choose <span class="math inline">\(u = \delta^k\)</span> and <span class="math inline">\(v = G^k\gamma^k\)</span>. Then <span class="math inline">\(au^T\gamma^k=1\)</span> and <span class="math inline">\(bv^T\gamma^k = -1\)</span> determine <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. Thus:
+<span class="math display" id="eq:dfp">\[\begin{equation}
+G^{k+1}=G^k+\dfrac{\delta^k \delta^{k^T}}{\delta^{k^T}\gamma^k} - \dfrac{G^k\gamma^k{\gamma^k}^TG^k}{{\gamma^k}^T G^k\gamma^k}   \tag{7.5}
+\end{equation}\]</span>
+This formula was first suggested as part of a method due to Davidon (1959), and later also presented by Fletcher and Powel (1963). The Quasi-Newton method which goes with this updating formula is known as DFP (Davidson, Fletcher and Powel) method. The DFP algorithm is also known as the <em>variable matrix</em> algorithm. The DFP algorithm preserves the positive definiteness of <span class="math inline">\(G^k\)</span> but can sometimes gives trouble when <span class="math inline">\(G^k\)</span> becomes nearly singular. A modification (known as BFGS) introduced in 1970 can cure this problem. The algorithm for DFP method is given below:</p>
+<ol style="list-style-type: decimal">
+<li>Set <span class="math inline">\(k = 0, G^0 = I\)</span> and compute <span class="math inline">\(\mathbf{g}^k = g(\mathbf{x}^k)\)</span>.</li>
+<li>Compute <span class="math inline">\(\mathbf{d}^k\)</span> from <span class="math inline">\(\mathbf{d}^k = -G^k\mathbf{g}^k\)</span>.</li>
+<li>Compute <span class="math inline">\(\alpha = \alpha^k\)</span> such that <span class="math inline">\(f(\mathbf{x}^k + \mathbf{\alpha}^k\mathbf{d}^k),\)</span> set <span class="math inline">\(\mathbf{x}^{k+1} = \mathbf{x}^{k} + \alpha^k\mathbf{d}^k\)</span>.</li>
+<li>Compute <span class="math inline">\(\mathbf{g}^{k+1}\)</span> such that <span class="math inline">\(\mathbf{g}^{k+1} = g(\mathbf{x}^{k+1})\)</span>.</li>
+<li>If <span class="math inline">\(\lVert g^{k+1} \rVert \leq \epsilon\)</span> (<span class="math inline">\(\epsilon\)</span> is a user supplied small number) then go to (9).</li>
+<li>Compute <span class="math inline">\(\delta^k\)</span> and <span class="math inline">\(\gamma^k\)</span> such that <span class="math inline">\(\delta^k = \mathbf{x}^{k+1} - \mathbf{x}^k\)</span> and <span class="math inline">\(\gamma = \mathbf{g}^{k+1} - \mathbf{g}^k\)</span>.</li>
+<li>Compute <span class="math inline">\(G^{k+1}\)</span>.</li>
+<li>Set <span class="math inline">\(k = k + 1\)</span> and go to (2).</li>
+<li>Set <span class="math inline">\(\mathbf{x}^* = \mathbf{k+1}\)</span>, STOP.</li>
+</ol>
+<hr />
+</div>
+<div id="exercises-6" class="section level3">
+<h3><span class="header-section-number">7.3.2</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>Use Newton method to minimise the function:
+<span class="math display">\[
+f(x)= {x_1}^4-3x_1x_2+(x_2+2)^2,
+\]</span>
+starting at the point <span class="math inline">\(x^0=[0,0]^T\)</span> and show that the function value at <span class="math inline">\(x^0\)</span> cannot be improved searching in
+Newton direction.</li>
+<li>Find the stationary points of:
+<span class="math display">\[
+f(x)=x_1^2+x_2^2-x_1^2x_2
+\]</span> and determine their nature. Plot the contours of <span class="math inline">\(f\)</span>. Find the value of <span class="math inline">\(f\)</span> after taking a basic Newton optimisation method from <span class="math inline">\(x^0=(1,1)^T\)</span>.</li>
+<li>Using Newton method, find the minimiser of:
+<span class="math display">\[
+f(x)=\frac{1}{2}x^2-\sin(x).
+\]</span>
+The initial value is <span class="math inline">\(x^0=0.5\)</span>. The required accuracy is <span class="math inline">\(\epsilon=10^{-5}\)</span> in the sense that you stop when <span class="math inline">\(\big |x^{k+1}-x^k \big |&lt;\epsilon\)</span>.</li>
+<li>Using the DFP method, find the minimum of the following function:
+<span class="math display">\[
+f(\mathbf{x}) = 4x_1^2 - 4x_1x_2 + 3x_2^2 + x_1,
+\]</span>
+using the starting point (4, 3).</li>
+<li>Find the minimum of the function given in question (2) utilising the DFP method. Use the same starting point.</li>
+</ol>
+<hr />
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="gradient-methods-for-unconstrained-optimisation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="direct-search-methods-for-unconstrained-optimisation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/07-newton_and_quasi-newton_methods.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["OptimisationII_notes.pdf", "OptimisationII_notes.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
