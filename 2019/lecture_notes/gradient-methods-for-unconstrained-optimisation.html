@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Gradient Methods for Unconstrained Optimisation | Optimisation II APPM2007</title>
+  <meta name="description" content="Course notes for Optimisation II at the University of the Witwatersrand" />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Gradient Methods for Unconstrained Optimisation | Optimisation II APPM2007" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:image" content="wits_high_def-min.png" />
+  <meta property="og:description" content="Course notes for Optimisation II at the University of the Witwatersrand" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Gradient Methods for Unconstrained Optimisation | Optimisation II APPM2007" />
+  
+  <meta name="twitter:description" content="Course notes for Optimisation II at the University of the Witwatersrand" />
+  <meta name="twitter:image" content="wits_high_def-min.png" />
+
+<meta name="author" content="Dr Matthew Woolway" />
+
+
+<meta name="date" content="2019-06-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="multivariate-unconstrained-optimisation.html">
+<link rel="next" href="newton-and-quasi-newton-methods.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Optimisation II</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Course Outline</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#course-structure-and-details"><i class="fa fa-check"></i>Course Structure and Details</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#course-assessment"><i class="fa fa-check"></i>Course Assessment</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#course-topics"><i class="fa fa-check"></i>Course Topics</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#hardware-requirements"><i class="fa fa-check"></i>Hardware Requirements</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html"><i class="fa fa-check"></i><b>1</b> Definition and General Concepts</a><ul>
+<li class="chapter" data-level="1.1" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#nonlinear-optimisation"><i class="fa fa-check"></i><b>1.1</b> Nonlinear Optimisation</a></li>
+<li class="chapter" data-level="1.2" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#general-statement-of-a-optimisation-problem"><i class="fa fa-check"></i><b>1.2</b> General Statement of a Optimisation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#important-optimisation-concepts"><i class="fa fa-check"></i><b>1.3</b> Important Optimisation Concepts</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#definitions"><i class="fa fa-check"></i><b>1.3.1</b> Definitions</a></li>
+<li class="chapter" data-level="1.3.2" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#convexity"><i class="fa fa-check"></i><b>1.3.2</b> Convexity</a></li>
+<li class="chapter" data-level="1.3.3" data-path="definition-and-general-concepts.html"><a href="definition-and-general-concepts.html#exercises"><i class="fa fa-check"></i><b>1.3.3</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html"><i class="fa fa-check"></i><b>2</b> One Dimensional Unconstrained and Bound Constrained Problems</a><ul>
+<li class="chapter" data-level="2.1" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html#unimodal-and-multimodal"><i class="fa fa-check"></i><b>2.1</b> Unimodal and Multimodal</a></li>
+<li class="chapter" data-level="2.2" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html#convex-functions"><i class="fa fa-check"></i><b>2.2</b> Convex Functions</a></li>
+<li class="chapter" data-level="2.3" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html#global-extrema"><i class="fa fa-check"></i><b>2.3</b> Global Extrema</a></li>
+<li class="chapter" data-level="2.4" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html#necessary-and-sufficient-conditions"><i class="fa fa-check"></i><b>2.4</b> Necessary and Sufficient Conditions</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="one-dimensional-unconstrained-and-bound-constrained-problems.html"><a href="one-dimensional-unconstrained-and-bound-constrained-problems.html#exercises-1"><i class="fa fa-check"></i><b>2.4.1</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="numerical-solutions-to-nonlinear-equations.html"><a href="numerical-solutions-to-nonlinear-equations.html"><i class="fa fa-check"></i><b>3</b> Numerical Solutions to Nonlinear Equations</a><ul>
+<li class="chapter" data-level="3.1" data-path="numerical-solutions-to-nonlinear-equations.html"><a href="numerical-solutions-to-nonlinear-equations.html#newtons-method"><i class="fa fa-check"></i><b>3.1</b> Newton’s Method</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="numerical-solutions-to-nonlinear-equations.html"><a href="numerical-solutions-to-nonlinear-equations.html#advantages-and-disadvantages-of-newtons-method"><i class="fa fa-check"></i><b>3.1.1</b> Advantages and Disadvantages of Newton’s Method</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="numerical-solutions-to-nonlinear-equations.html"><a href="numerical-solutions-to-nonlinear-equations.html#secant-method"><i class="fa fa-check"></i><b>3.2</b> Secant Method</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="numerical-solutions-to-nonlinear-equations.html"><a href="numerical-solutions-to-nonlinear-equations.html#exercises-2"><i class="fa fa-check"></i><b>3.2.1</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="numerical-optimisation-of-univariate-functions.html"><a href="numerical-optimisation-of-univariate-functions.html"><i class="fa fa-check"></i><b>4</b> Numerical Optimisation of Univariate Functions</a><ul>
+<li class="chapter" data-level="4.1" data-path="numerical-optimisation-of-univariate-functions.html"><a href="numerical-optimisation-of-univariate-functions.html#techniques-using-function-evaluations"><i class="fa fa-check"></i><b>4.1</b> Techniques Using Function Evaluations</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="numerical-optimisation-of-univariate-functions.html"><a href="numerical-optimisation-of-univariate-functions.html#bisection-method"><i class="fa fa-check"></i><b>4.1.1</b> Bisection Method</a></li>
+<li class="chapter" data-level="4.1.2" data-path="numerical-optimisation-of-univariate-functions.html"><a href="numerical-optimisation-of-univariate-functions.html#golden-search-method"><i class="fa fa-check"></i><b>4.1.2</b> Golden Search Method</a></li>
+<li class="chapter" data-level="4.1.3" data-path="numerical-optimisation-of-univariate-functions.html"><a href="numerical-optimisation-of-univariate-functions.html#exercises-3"><i class="fa fa-check"></i><b>4.1.3</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html"><i class="fa fa-check"></i><b>5</b> Multivariate Unconstrained Optimisation</a><ul>
+<li class="chapter" data-level="5.1" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#terminology-for-functions-of-several-variables"><i class="fa fa-check"></i><b>5.1</b> Terminology for Functions of Several Variables</a></li>
+<li class="chapter" data-level="5.2" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#a-line-in-a-particular-direction-in-the-context-of-optimisation"><i class="fa fa-check"></i><b>5.2</b> A Line in a Particular Direction in the Context of Optimisation</a></li>
+<li class="chapter" data-level="5.3" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#taylor-series-for-multivariate-function"><i class="fa fa-check"></i><b>5.3</b> Taylor Series for Multivariate Function</a></li>
+<li class="chapter" data-level="5.4" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#quadratic-forms"><i class="fa fa-check"></i><b>5.4</b> Quadratic Forms</a></li>
+<li class="chapter" data-level="5.5" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#stationary-points"><i class="fa fa-check"></i><b>5.5</b> Stationary Points</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#tests-for-positive-definiteness"><i class="fa fa-check"></i><b>5.5.1</b> Tests for Positive Definiteness</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#necessary-and-sufficient-conditions-1"><i class="fa fa-check"></i><b>5.6</b> Necessary and Sufficient Conditions</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="multivariate-unconstrained-optimisation.html"><a href="multivariate-unconstrained-optimisation.html#exercises-4"><i class="fa fa-check"></i><b>5.6.1</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html"><i class="fa fa-check"></i><b>6</b> Gradient Methods for Unconstrained Optimisation</a><ul>
+<li class="chapter" data-level="6.1" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#general-line-search-techniques-used-in-unconstrained-multivariate-minimisation"><i class="fa fa-check"></i><b>6.1</b> General Line Search Techniques used in Unconstrained Multivariate Minimisation</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#challenges-in-computing-step-length-alphak"><i class="fa fa-check"></i><b>6.1.1</b> Challenges in Computing Step Length <span class="math inline">\(\alpha^k\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#exact-and-inexact-line-search"><i class="fa fa-check"></i><b>6.2</b> Exact and Inexact Line Search</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#algorithmic-structure"><i class="fa fa-check"></i><b>6.2.1</b> Algorithmic Structure</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#the-descent-condition"><i class="fa fa-check"></i><b>6.3</b> The Descent Condition</a></li>
+<li class="chapter" data-level="6.4" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#the-direction-of-greatest-reduction"><i class="fa fa-check"></i><b>6.4</b> The Direction of Greatest Reduction</a></li>
+<li class="chapter" data-level="6.5" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#the-method-of-steepest-descent"><i class="fa fa-check"></i><b>6.5</b> The Method of Steepest Descent</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#steepest-descent-algorithm"><i class="fa fa-check"></i><b>6.5.1</b> Steepest Descent Algorithm</a></li>
+<li class="chapter" data-level="6.5.2" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#convergence-criteria"><i class="fa fa-check"></i><b>6.5.2</b> Convergence Criteria</a></li>
+<li class="chapter" data-level="6.5.3" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#inexact-line-search"><i class="fa fa-check"></i><b>6.5.3</b> Inexact Line Search</a></li>
+<li class="chapter" data-level="6.5.4" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#exercises-5"><i class="fa fa-check"></i><b>6.5.4</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#the-gradient-descent-algorithm-and-machine-learning"><i class="fa fa-check"></i><b>6.6</b> The Gradient Descent Algorithm and Machine Learning</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#basic-example"><i class="fa fa-check"></i><b>6.6.1</b> Basic Example</a></li>
+<li class="chapter" data-level="6.6.2" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#adaptive-step-size"><i class="fa fa-check"></i><b>6.6.2</b> Adaptive Step-Size</a></li>
+<li class="chapter" data-level="6.6.3" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#decreasing-step-size"><i class="fa fa-check"></i><b>6.6.3</b> Decreasing Step-Size</a></li>
+<li class="chapter" data-level="6.6.4" data-path="gradient-methods-for-unconstrained-optimisation.html"><a href="gradient-methods-for-unconstrained-optimisation.html#stochastic-gradient-descent"><i class="fa fa-check"></i><b>6.6.4</b> Stochastic Gradient Descent</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html"><i class="fa fa-check"></i><b>7</b> Newton and Quasi-Newton Methods</a><ul>
+<li class="chapter" data-level="7.1" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html#the-modified-newton-method"><i class="fa fa-check"></i><b>7.1</b> The Modified Newton Method</a></li>
+<li class="chapter" data-level="7.2" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html#convergence-of-newtons-method-for-quadratic-functions"><i class="fa fa-check"></i><b>7.2</b> Convergence of Newton’s Method for Quadratic Functions</a></li>
+<li class="chapter" data-level="7.3" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html#quasi-newton-methods"><i class="fa fa-check"></i><b>7.3</b> Quasi-Newton Methods</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html#the-dfp-quasi-newton-method"><i class="fa fa-check"></i><b>7.3.1</b> The DFP Quasi-Newton Method</a></li>
+<li class="chapter" data-level="7.3.2" data-path="newton-and-quasi-newton-methods.html"><a href="newton-and-quasi-newton-methods.html#exercises-6"><i class="fa fa-check"></i><b>7.3.2</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="direct-search-methods-for-unconstrained-optimisation.html"><a href="direct-search-methods-for-unconstrained-optimisation.html"><i class="fa fa-check"></i><b>8</b> Direct Search Methods for Unconstrained Optimisation</a><ul>
+<li class="chapter" data-level="8.1" data-path="direct-search-methods-for-unconstrained-optimisation.html"><a href="direct-search-methods-for-unconstrained-optimisation.html#random-walk-method"><i class="fa fa-check"></i><b>8.1</b> Random Walk Method</a></li>
+<li class="chapter" data-level="8.2" data-path="direct-search-methods-for-unconstrained-optimisation.html"><a href="direct-search-methods-for-unconstrained-optimisation.html#downhill-simplex-method-of-nelder-and-mead"><i class="fa fa-check"></i><b>8.2</b> Downhill Simplex Method of Nelder and Mead</a></li>
+<li class="chapter" data-level="8.3" data-path="direct-search-methods-for-unconstrained-optimisation.html"><a href="direct-search-methods-for-unconstrained-optimisation.html#rosenbrock-function-example"><i class="fa fa-check"></i><b>8.3</b> Rosenbrock Function Example</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="direct-search-methods-for-unconstrained-optimisation.html"><a href="direct-search-methods-for-unconstrained-optimisation.html#exercises-7"><i class="fa fa-check"></i><b>8.3.1</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="lagrangian-multipliers-for-constraint-optimisation.html"><a href="lagrangian-multipliers-for-constraint-optimisation.html"><i class="fa fa-check"></i><b>9</b> Lagrangian Multipliers for Constraint Optimisation</a><ul>
+<li class="chapter" data-level="9.0.1" data-path="lagrangian-multipliers-for-constraint-optimisation.html"><a href="lagrangian-multipliers-for-constraint-optimisation.html#example-12"><i class="fa fa-check"></i><b>9.0.1</b> Example</a></li>
+<li class="chapter" data-level="9.0.2" data-path="lagrangian-multipliers-for-constraint-optimisation.html"><a href="lagrangian-multipliers-for-constraint-optimisation.html#exercises-8"><i class="fa fa-check"></i><b>9.0.2</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">University of the Witwatersrand</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Optimisation II APPM2007</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="gradient-methods-for-unconstrained-optimisation" class="section level1">
+<h1><span class="header-section-number">Chapter 6</span> Gradient Methods for Unconstrained Optimisation</h1>
+<p>In this chapter we will study the methods for solving nonlinear unconstrained optimisation problems. The non-linear minimisation algorithms to be described here are iterative methods which generate a sequence of points, <span class="math inline">\(\mathbf{x}^0, \mathbf{x}^1\ldots.\)</span> say, or <span class="math inline">\(\{\mathbf{x}^k\}\)</span> (superscripts denoting iteration number), hopefully converging to a minimiser <span class="math inline">\(\mathbf{x}^*\)</span> of <span class="math inline">\(f(\mathbf{x}).\)</span> Univariate minimisation along the line in a particular direction is known as the line search technique. One dimensional minimisation is known as line search subproblem in many variable unconstrained non-linear minimisation.</p>
+<div id="general-line-search-techniques-used-in-unconstrained-multivariate-minimisation" class="section level2">
+<h2><span class="header-section-number">6.1</span> General Line Search Techniques used in Unconstrained Multivariate Minimisation</h2>
+<p>The algorithms for multivariate minimisation are all iterative processes which fit into the same general framework:</p>
+<blockquote>
+<p>At the beginning of the <span class="math inline">\(k\)</span>-th iteration the current estimate of minimum is
+<span class="math inline">\(f(\mathbf {x}^k)\)</span>, and a search is made in <span class="math inline">\(\mathbb{R}^n\)</span> from <span class="math inline">\(\mathbf{x}^k\)</span> along a
+given vector direction <span class="math inline">\(\mathbf{d}^k\)</span> (<span class="math inline">\(\mathbf{d}^k\)</span> is different for different
+minimization methods) in an attempt to find a new point
+<span class="math inline">\(\mathbf{x}^{k+1}\)</span> such that <span class="math inline">\(f(\mathbf{x}^{k+1})\)</span> is sufficiently smaller than
+<span class="math inline">\(f(\mathbf{x}^k)\)</span>. This process is called line (or linear) search.</p>
+</blockquote>
+<p>Line-search methods, therefore, generate the iterates by setting:
+<span class="math display">\[\begin{equation}
+\mathbf{x}^{k+1} = \mathbf{x}^k + \alpha^k \mathbf{d}^k\label{eq:linesearch1}
+\end{equation}\]</span>
+where <span class="math inline">\(\mathbf{d}^k\)</span> is a search direction and <span class="math inline">\(\alpha_k &gt; 0\)</span>
+is chosen so that:
+<span class="math display" id="eq:linesearch2">\[\begin{equation}
+f(\mathbf{x}^k + \alpha^k \mathbf{d}^k)= f(\mathbf{x}^{k+1}) &lt; f(\mathbf{x}^k), \tag{6.1}
+\end{equation}\]</span>
+Therefore, for a given <span class="math inline">\(\mathbf{d}^k\)</span>, a line-search procedure is used to choose an <span class="math inline">\(\alpha_k &gt; 0\)</span> that approximately minimises <span class="math inline">\(f\)</span> along the ray <span class="math inline">\({x^k + \alpha^k d^k : \alpha^k&gt;0}\)</span>. Hence, the line search is the univariate minimisation involving the single variable <span class="math inline">\(\alpha^k\)</span> (since both the <span class="math inline">\(\mathbf{x}^k\)</span> and <span class="math inline">\(\mathbf{d}^k)\)</span> are known <span class="math inline">\(f(\mathbf{x}^k + \alpha^k\mathbf{d}^k)\)</span> becomes a function of <span class="math inline">\(\alpha^k\)</span> only) such that:
+<span class="math display" id="eq:linesearch3">\[\begin{equation}
+f(\alpha^k) = f(\mathbf{x}^k + \alpha^k\mathbf{d}^k).\tag{6.2}
+\end{equation}\]</span></p>
+<p>Bear in mind that this single variable minimiser cannot always be obtained analytically and hence some numerical techniques may be necessary.</p>
+<div id="challenges-in-computing-step-length-alphak" class="section level3">
+<h3><span class="header-section-number">6.1.1</span> Challenges in Computing Step Length <span class="math inline">\(\alpha^k\)</span></h3>
+<p>The challenges in finding a good <span class="math inline">\(\alpha^k\)</span> are both in avoiding a step length that is too long or too short. Consider the Figures below:</p>
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-38-1.png" /><!-- --></p>
+<p>Here the objective function is <span class="math inline">\(f(x) = x^2\)</span> and the iterates, <span class="math inline">\(x^{k+1} = x^k + \alpha^k d^k\)</span> are generated by the descent directions <span class="math inline">\(d^k = (-1)^{k+1}\)</span> with steps <span class="math inline">\(\alpha^k = 2 + \frac{3}{2^{k+1}}\)</span> with an initial starting point of <span class="math inline">\(x_0 = 2\)</span>.</p>
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-39-1.png" /><!-- --></p>
+<p>Here the objective function is <span class="math inline">\(f(x) = x^2\)</span> and the iterates, <span class="math inline">\(x^{k+1} = x^k + \alpha^k d^k\)</span> are generated by the descent directions <span class="math inline">\(d^k = (-1)\)</span> with steps <span class="math inline">\(\alpha^k = \frac{1}{2^{k+1}}\)</span> with an initial starting point of <span class="math inline">\(x_0 = 2\)</span>.</p>
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-40-1.png" /><!-- --></p>
+</div>
+</div>
+<div id="exact-and-inexact-line-search" class="section level2">
+<h2><span class="header-section-number">6.2</span> Exact and Inexact Line Search</h2>
+<p>Given the direction <span class="math inline">\(\mathbf{d}^k\)</span> and the point <span class="math inline">\(\mathbf{x}^k\)</span>, <span class="math inline">\(f(\mathbf{x}^k+\alpha \mathbf{d}^k)\)</span> becomes a function of <span class="math inline">\(\alpha\)</span>. Hence it is simply a one dimensional minimisation with respect to <span class="math inline">\(\alpha\)</span>. The solution of <span class="math inline">\(\frac{df(\alpha)}{d\alpha}=0\)</span> will determine the exact location of the minimiser <span class="math inline">\(\alpha^k\)</span>. However, it may not be possible to locate the exact location of <span class="math inline">\(\alpha^k\)</span> for which <span class="math inline">\(\frac{df(\alpha)}{d\alpha}=0\)</span>. It may even require very large number of iterations to locate the minimiser <span class="math inline">\(\alpha^k\)</span>. Nonetheless, the idea is conceptually useful. Notice that for exact line search the slope <span class="math inline">\(\frac{df}{d\alpha}\)</span> at <span class="math inline">\(\alpha^k\)</span> must be zero. Therefore, we get:
+<span class="math display" id="eq:linesearch4">\[\begin{equation}
+\dfrac{df(\mathbf{x}^{k+1})}{d\alpha}=\nabla f(\mathbf{x}^{k+1})^T\frac{d\mathbf{x}^{k+1}}{d\alpha}=\mathbf{g} (x^{k+1})^T\mathbf{d}^k=0.\tag{6.3}
+\end{equation}\]</span></p>
+<p>Line search algorithms used in practice are much more involved than the one dimensional search methods (optimisation methods) presented in the previous chapter. The reason for this stems from several practical considerations. First, determining the value of <span class="math inline">\(\alpha_k\)</span> that exactly minimises <span class="math inline">\(f(\alpha)\)</span> may be computationally demanding; even worse, the minimiser of <span class="math inline">\(f(\alpha)\)</span> may not even exist. Second, practical experience suggests that it is better to allocate more computational time on iterating the optimisation algorithm rather than performing exact line searches. These considerations led to the development of conditions for terminating line search algorithms that would result in low-accuracy line searches while still securing a decrease in the value of <span class="math inline">\(f\)</span> from one iteration to the next.</p>
+<p>In practice, the line search is terminated when some descent conditions along the line <span class="math inline">\(\mathbf{x}^k+\alpha \mathbf{d}^k\)</span> are satisfied. Hence, it is no longer necessary to go for the exact line search. The line search carried out in this way is known as the inexact line search. A further justification for the inexact line search is that it is not efficient to determine the line search minima to a high accuracy when <span class="math inline">\(\mathbf{x}^k\)</span> is far from the minimiser <span class="math inline">\(\mathbf{x}^*\)</span>. Under these circumstances, nonlinear minimisation algorithms employ an inexact or approximate line search. To sum up, exact line search relates to theoretical concept and the inexact is its practical implementation.</p>
+<p><strong>Remark:</strong></p>
+<p>Each iteration of a line search method computes a search direction <span class="math inline">\(\mathbf{d}^k\)</span> and then decides how far to move along that direction. The iteration is given by <span class="math display">\[\mathbf{x}^{k+1}=\mathbf{x}^k+\alpha^k\mathbf{d}^k,\]</span> where the positive scalar <span class="math inline">\(\alpha^k\)</span> is called the <em>step length</em>. The success of a line search method depends on effective choices of both the direction <span class="math inline">\(\mathbf{d}^k\)</span> and and the step length <span class="math inline">\(\alpha^k\)</span>. Most line search algorithms require <span class="math inline">\(\mathbf{d}^k\)</span> to be a descent direction.</p>
+<div id="algorithmic-structure" class="section level3">
+<h3><span class="header-section-number">6.2.1</span> Algorithmic Structure</h3>
+<p>The typical behaviour of a minimisation algorithm is that it repeatedly generates points <span class="math inline">\(\mathbf{x}^k\)</span> such that as <span class="math inline">\(k\)</span> increases <span class="math inline">\(\mathbf{x}^k\)</span> moves close to <span class="math inline">\(\mathbf{x}^*.\)</span> Features of a minimisation algorithm is that <span class="math inline">\(f(\mathbf{x}^k)\)</span> is always reduced on each iteration, which imply that the stationary point turns out to be a local minimiser. In a minimisation algorithm it is required to supply an initial estimate, say <span class="math inline">\(\mathbf{x}^0\)</span>. At each iteration the algorithm finds a descent direction along which the function is minimised. This minimisation algorithm in a particular direction is known as <em>the line search</em>. The basic structure of the general algorithm is:</p>
+<ol style="list-style-type: decimal">
+<li>Initialise the algorithm with estimate <span class="math inline">\(\mathbf{x_k}\)</span>. Initialise <span class="math inline">\(k = 0\)</span>.</li>
+<li>Determine a search direction <span class="math inline">\(\mathbf{d}^k\)</span> at <span class="math inline">\(\mathbf{x}^k\)</span>.</li>
+<li>Find <span class="math inline">\(\alpha^k\)</span> to minimise <span class="math inline">\(f(\mathbf{x}^k + \alpha \mathbf{d}^k)\)</span> with respect to <span class="math inline">\(\alpha\)</span>.</li>
+<li>Set <span class="math inline">\(\mathbf{x}^{k+1} = \mathbf{x}^k + \alpha^k\mathbf{d}^k\)</span>.</li>
+<li>Line search is stopped when <span class="math inline">\(f(\mathbf{x}^{k+1}) &lt; f(\mathbf{x}^k)\)</span></li>
+<li>If algorithm meets stopping criteria then <strong>STOP</strong>, <strong>ELSE</strong> set <span class="math inline">\(k = k + 1\)</span> and go back to (2).</li>
+</ol>
+<p>Different minimisation methods select <span class="math inline">\(\mathbf{d}^k\)</span> in different ways in <span class="math inline">\((2)\)</span>. Steps <span class="math inline">\((3 \&amp; 4)\)</span> is the one dimensional <em>sub-problem</em> carried out along the line <span class="math inline">\(\mathbf{x}^{k+1}=\mathbf{x}^k+\alpha^k\mathbf{d}^k\)</span> for <span class="math inline">\(\alpha\in [0,1]\)</span>. The direction <span class="math inline">\(\mathbf{d}^k\)</span> at <span class="math inline">\(\mathbf{x}^k\)</span> must satisfy the descent condition.</p>
+</div>
+</div>
+<div id="the-descent-condition" class="section level2">
+<h2><span class="header-section-number">6.3</span> The Descent Condition</h2>
+<p>Central to the development of the gradient based minimisation methods is the idea of a descend direction. Conditions for the descent direction can be obtained using Taylor series around the point <span class="math inline">\(\mathbf{x}^k\)</span>. Using two terms of Taylor series we have:
+<span class="math display" id="eq:linesearch5">\[\begin{equation}
+f(\mathbf{x}^k+\alpha \mathbf{d}^k) - f(\mathbf{x}^k) = \alpha \mathbf{d^k}^T \nabla f(\mathbf{x}^k) + \cdots\tag{6.4}
+\end{equation}\]</span>
+Clearly the descent condition can easily be seen as:
+<span class="math display" id="eq:linesearch6">\[\begin{equation}
+\mathbf{d}^{k{^T}}\nabla f(\mathbf{x}^k) &lt;0,\tag{6.5}
+\end{equation}\]</span>
+since we require the left hand side of Equation <a href="gradient-methods-for-unconstrained-optimisation.html#eq:linesearch5">(6.4)</a> to be negative.</p>
+</div>
+<div id="the-direction-of-greatest-reduction" class="section level2">
+<h2><span class="header-section-number">6.4</span> The Direction of Greatest Reduction</h2>
+<p>A simple line search descent method is the <em>steepest descent method</em> in which:
+<span class="math display">\[\begin{equation}
+\mathbf{d}^k=-\nabla f(\mathbf{x}^k)=-\mathbf{g}^k\, , \ \ \ \ \forall k
+\end{equation}\]</span></p>
+<p>From Equation <a href="gradient-methods-for-unconstrained-optimisation.html#eq:linesearch5">(6.4)</a> we see that:
+<span class="math display" id="eq:linesearch7">\[\begin{eqnarray}
+f^{k+1}-f^k&amp;=&amp;\alpha^k{\mathbf{d}^k}^T\mathbf{g}^k\\
+&amp;=&amp;\alpha^k\lVert \mathbf{d}^k \rVert \lVert\mathbf{g}^k\rVert \cos\theta,\tag{6.6}
+\end{eqnarray}\]</span>
+where <span class="math inline">\(\theta\)</span> can be interpreted geometrically as the angle between <span class="math inline">\(\mathbf{d}^k\)</span> and <span class="math inline">\(\mathbf{g}^k\)</span>. If we allow
+<span class="math inline">\(\theta\)</span> to vary holding <span class="math inline">\(\alpha^k, \lVert \mathbf{d}^k \rVert\)</span> and <span class="math inline">\(\lVert\mathbf{g}^k\rVert\)</span> constant, then the right hand side of Equation <a href="gradient-methods-for-unconstrained-optimisation.html#eq:linesearch7">(6.6)</a> is most negative when <span class="math inline">\(\theta=\pi\)</span>. Thus when <span class="math inline">\(\alpha^k\)</span> is sufficiently small, the greatest reduction in function is obtained in the direction:
+<span class="math display" id="eq:linesearch8">\[\begin{equation}
+\mathbf{d}^k=-\mathbf{g}^k \tag{6.7}
+\end{equation}\]</span>
+This negative gradient direction which satisfy the descent condition <a href="gradient-methods-for-unconstrained-optimisation.html#eq:linesearch8">(6.7)</a> gives rise to <em>the method of steepest descent</em>.</p>
+</div>
+<div id="the-method-of-steepest-descent" class="section level2">
+<h2><span class="header-section-number">6.5</span> The Method of Steepest Descent</h2>
+<p>Here the the search direction is taken as the negative gradient and the step size, <span class="math inline">\(\alpha_k,\)</span> is chosen to achieve the maximum decrease in the objective function <span class="math inline">\(f\)</span> at each step. Specifically we solve the problem:
+<span class="math display">\[\begin{equation}
+\text{Minimise}\  f\left(\mathbf{x}^{(k)} - \alpha \nabla f\left(\mathbf{x}^{(k)}\right)\right)\ \ \text{w.r.t.}\ \alpha
+\end{equation}\]</span>
+This is now a one-dimensional optimisation problem.</p>
+<div id="steepest-descent-algorithm" class="section level3">
+<h3><span class="header-section-number">6.5.1</span> Steepest Descent Algorithm</h3>
+<p>Given <span class="math inline">\(\mathbf{x}_0\)</span>, for all iterations <span class="math inline">\(k = 1, 2, \ldots\)</span> until stopping criterion is met, do:</p>
+<ul>
+<li>Compute gradient <span class="math inline">\(\mathbf{g}(\mathbf{x}^k) = \nabla f(\mathbf{x}^k)\)</span>.</li>
+<li>Compute <span class="math inline">\(\alpha^k\)</span> such that <span class="math inline">\(f(\mathbf{x}^k - \alpha^k \mathbf{g}^k) = \underset{\text{min} }{\alpha} f(\mathbf{x}^k - \alpha \mathbf{g}^k)\)</span>.</li>
+<li>Compute <span class="math inline">\(\mathbf{x}^{k+1} = \mathbf{x}^k - \alpha^k \mathbf{g}^k\)</span></li>
+<li>If stopping criterion met <strong>STOP</strong>, <strong>Else</strong> set <span class="math inline">\(k = k + 1\)</span> and go to (1).</li>
+</ul>
+</div>
+<div id="convergence-criteria" class="section level3">
+<h3><span class="header-section-number">6.5.2</span> Convergence Criteria</h3>
+In practice the algorithm is terminated if some convergence criterion is satisfied. Usually termination is enforced at iteration <span class="math inline">\(k\)</span> if one, or a combination of the following is met:
+
+<p>Here <span class="math inline">\(\epsilon_1, \epsilon_2\)</span> and <span class="math inline">\(\epsilon_3\)</span> are designated some small positive tolerances.</p>
+<hr />
+<div id="example-9" class="section level4">
+<h4><span class="header-section-number">6.5.2.1</span> Example</h4>
+<p>Consider <span class="math inline">\(f(\mathbf{x}) = 2x_1^2 + 3x_2^2\)</span>, where <span class="math inline">\(\mathbf{x}_0 = (1,1).\)</span> Use two iterations of Steepest Descent.</p>
+<p><strong>Solution:</strong></p>
+<p>Compute <span class="math inline">\(\nabla f(\mathbf{x}) = \begin{bmatrix} 4x_1 \\ 6x_2\end{bmatrix} = -\mathbf{g}\)</span>.</p>
+<p><em>First Iteration:</em></p>
+<p>We know that:
+<span class="math display">\[
+\mathbf{x}_1 = \mathbf{x}_0 + \alpha_0 g(\mathbf{x}_0),
+\]</span>
+so:
+<span class="math display">\[
+\mathbf{x}_1 = \begin{bmatrix} 1 \\ 1\end{bmatrix} - \begin{bmatrix} 4\alpha \\ 6\alpha\end{bmatrix} = \begin{bmatrix} 1 - 4\alpha \\ 1 - 6\alpha\end{bmatrix}.
+\]</span>
+Therefore:
+<span class="math display">\[\begin{eqnarray*}
+f(\mathbf{x}_0 + \alpha_0 g(\mathbf{x}_0)) &amp;=&amp; 2(1 - 4\alpha)^2 + 3(1 - 6\alpha)^2\\
+&amp;=&amp; 2 - 16\alpha + 32\alpha^2 + 3 - 36\alpha + 108\alpha^2\\
+\Rightarrow \nabla f(\mathbf{x}_0 + \alpha_0 g(\mathbf{x}_0)) &amp;=&amp; 280\alpha -52 = 0\\
+\Rightarrow \alpha &amp;=&amp; 52/280 = 13/70.
+\end{eqnarray*}\]</span>
+Finally:
+<span class="math display">\[
+\mathbf{x}_1 =  \begin{bmatrix} 1 - 4\dfrac{13}{70} \\ 1 - 6\dfrac{13}{70}\end{bmatrix} = \begin{bmatrix} \dfrac{9}{35} \\ \dfrac{-4}{35}\end{bmatrix}.
+\]</span></p>
+<p><em>Second Iteration:</em></p>
+<p>We have:
+<span class="math display">\[
+\mathbf{x}_2 = \mathbf{x}_1 + \alpha_1 g(\mathbf{x}_1)
+\]</span>
+Compute (Simplified here):
+<span class="math display">\[
+f(\mathbf{x}_1 + \alpha_1 g(\mathbf{x}_1)) = \dfrac{1}{35^2}\left(2(9 - 36\alpha)^2 + 3(-4 + 24\alpha)^2\right).
+\]</span>
+We get:
+<span class="math display">\[\begin{eqnarray*}
+\nabla f(\mathbf{x}_1 + \alpha_1 g(\mathbf{x}_1)) &amp;=&amp; 0\\
+\Rightarrow 60\alpha &amp;=&amp; 13 \\
+\alpha &amp;=&amp; \dfrac{13}{60}
+\end{eqnarray*}\]</span>
+Therefore:
+<span class="math display">\[
+\mathbf{x}_2 = \mathbf{x}_1 + \alpha_1 g(\mathbf{x}_1) = \begin{bmatrix} \dfrac{9}{35} \\ \dfrac{-4}{35}\end{bmatrix} - \dfrac{13}{60}\begin{bmatrix} \dfrac{9}{35} \\ \dfrac{-4}{35}\end{bmatrix} = \begin{bmatrix} \dfrac{6}{175} \\ \dfrac{6}{175}\end{bmatrix}.
+\]</span>
+The process continues in the same manner above. We can see from inspection that the function should achieve a minimum at (0, 0). We can see this as a sanity check in the Python code below.</p>
+<p>It is also worth noting that since this is a quadratic function, we can actually use another technique. We will redo the first iteration as illustration. Specifically, the quadratic functions allow <span class="math inline">\(\alpha\)</span> to be solved using:
+<span class="math display">\[
+\alpha_k = \dfrac{-g^{k^T}d^k}{d^{k^T}Q d^{k}}.
+\]</span>
+Thus:</p>
+<p><em>First Iteration:</em></p>
+<p>Compute <span class="math inline">\(f(\mathbf{x}^0) = 5,\ \mathbf{g}(\bar{x}^0)^T = (4,6)\)</span> and
+<span class="math inline">\(Q = \begin{bmatrix} 4 &amp; 0\\0 &amp; 6 \end{bmatrix}\)</span><br />
+Therefore:
+<span class="math display">\[
+\alpha_1 = -\dfrac{(g^k)^T d^k}{(d^k)^T Q d^k} = \dfrac{52}{(4,6)\begin{bmatrix}
+            4 &amp; 0\\0 &amp; 6
+            \end{bmatrix}\begin{bmatrix}
+            4 \\6 
+            \end{bmatrix}} = \dfrac{13}{70}
+\]</span>
+Thus:
+<span class="math display">\[
+\mathbf{x}^1 = (1,1) - \dfrac{13}{70}(4,6) = \left(-\dfrac{9}{35},\dfrac{4}{35}\right)
+\]</span>
+Similarly, the process repeats.</p>
+<hr />
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-41-1.png" /><!-- --></p>
+<pre><code>## &lt;a list of 13 text.Text objects&gt;</code></pre>
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-41-2.png" /><!-- --></p>
+</div>
+</div>
+<div id="inexact-line-search" class="section level3">
+<h3><span class="header-section-number">6.5.3</span> Inexact Line Search</h3>
+<p>Although you will only cover inexact line search techniques in the third year syllabus, we will quickly introduce a very simply inexact technique to use for the purpose of your labs.</p>
+<div id="backtracking-line-search" class="section level4">
+<h4><span class="header-section-number">6.5.3.1</span> Backtracking Line Search</h4>
+<p>One way to adaptively choose the step size is to do the following:</p>
+<ul>
+<li>First fix a parameter <span class="math inline">\(0 &lt; \beta &lt; 1\)</span></li>
+<li>Then at each iteration, start with <span class="math inline">\(t = 1\)</span> and while
+<span class="math display">\[
+  f(x - t\nabla f(x)) &gt; f(x) - \dfrac{t}{2}\lVert \nabla f(x) \rVert^2,
+  \]</span>
+and update <span class="math inline">\(t = \beta t\)</span>.</li>
+</ul>
+<p>This is a simple technique and tends to work quite well in practice. For further reading you can consult <em>Convex Optimisation</em> by Boyd.</p>
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-43-1.png" /><!-- --></p>
+<hr />
+</div>
+</div>
+<div id="exercises-5" class="section level3">
+<h3><span class="header-section-number">6.5.4</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>Show that the value of the function <span class="math display">\[ax_1^2+bx_2^2+cx_3^2\]</span> reached after taking a single of the steepest descent method from the point <span class="math inline">\((1,1,1)^T\)</span> is:
+<span class="math display">\[
+\dfrac{ab(b-a)^2+bc(c-b)^2+ca(a-c)^2}{a^3+b^3+c^3}.
+\]</span></li>
+<li>Show that if exact line search is carried out on the quadratic <span class="math display">\[\frac{1}{2}x^TQx+b^Tx+c\]</span> using the iteration <span class="math display">\[
+x^{k+1}=x^k+\alpha^kd^k,
+\]</span>
+then:
+<span class="math display">\[
+\alpha^k=-\frac{g^{(k)T}d^k}{d^{(k)T}Qd^k}.
+\]</span></li>
+<li>Compute the first two iterations of the method of steepest descent applied to the objective function
+<span class="math display">\[
+f(\mathbf{x})=4{x_1}^2+{x_2}^2-{x_1}^2x_2
+\]</span>
+with <span class="math inline">\(x^0=[1,1]^T.\)</span> Use exact line search.</li>
+<li>Use three iterations of the steepest descent method on the function
+<span class="math display">\[
+f(\mathbf{x})=3{x_1}^2+2{x_2}^2
+\]</span>
+with initial point <span class="math inline">\((1,1)^T\)</span>.</li>
+</ol>
+<hr />
+</div>
+</div>
+<div id="the-gradient-descent-algorithm-and-machine-learning" class="section level2">
+<h2><span class="header-section-number">6.6</span> The Gradient Descent Algorithm and Machine Learning</h2>
+<p>We will briefly look at the context of what we have learnt from the machine learning perspective. This is to emphasize the power of this chapter. In machine learning, you will find the gradient descent algorithm everywhere. While the literature may seem to allude to this method being new, powerful and cool, it is really nothing more than the method of steepest descent introduced above.</p>
+<div id="basic-example" class="section level3">
+<h3><span class="header-section-number">6.6.1</span> Basic Example</h3>
+<p>Let’s try find a local minimum for the function <span class="math inline">\(f(x) = x^3 -2x^2 + 2\)</span>:</p>
+<pre><code>## (-1, 2.5)</code></pre>
+<pre><code>## (0, 3)</code></pre>
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-44-1.png" /><!-- --></p>
+<p>So from the above plot we can see that there is a local minimum somewhere around 1.3 - 1.4 according to the x-axis. Of course, we normally won’t be afforded the luxury of information such as this <em>a priori</em>, so let’s just assume we arbitrarily set our starting point to be <span class="math inline">\(x_0 = 2\)</span>. Implementing the gradient descent with a fixed stepsize, or learning rate (in the context of ML) we have:</p>
+<pre class="sourceCode python"><code class="sourceCode python">
+x_old <span class="op">=</span> <span class="dv">0</span>
+x_new <span class="op">=</span> <span class="dv">2</span> <span class="co"># The algorithm starts at x=2</span>
+n_k <span class="op">=</span> <span class="fl">0.1</span> <span class="co"># step size fixed at 0.1</span>
+precision <span class="op">=</span> <span class="fl">0.0001</span> <span class="co"># tolerance value</span>
+
+x_list, y_list <span class="op">=</span> [x_new], [f(x_new)]
+
+<span class="co"># returns the value of the derivative of our function</span>
+<span class="kw">def</span> f_prime(x):
+    <span class="cf">return</span> <span class="dv">3</span><span class="op">*</span>x<span class="op">**</span><span class="dv">2-4</span><span class="op">*</span>x
+ 
+<span class="cf">while</span> <span class="bu">abs</span>(x_new <span class="op">-</span> x_old) <span class="op">&gt;</span> precision:
+    x_old <span class="op">=</span> x_new
+    s_k <span class="op">=</span> <span class="op">-</span>f_prime(x_old)
+    x_new <span class="op">=</span> x_old <span class="op">+</span> n_k <span class="op">*</span> s_k
+    x_list.append(x_new)
+    y_list.append(f(x_new))
+<span class="bu">print</span>(<span class="st">&quot;Local minimum occurs at:&quot;</span>, x_new)</code></pre>
+<pre><code>## Local minimum occurs at: 1.3334253508453249</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="st">&quot;Number of steps:&quot;</span>, <span class="bu">len</span>(x_list))</code></pre>
+<pre><code>## Number of steps: 17</code></pre>
+<p>How did the algorithm look step by step?</p>
+<pre><code>## (-1, 2.5)</code></pre>
+<pre><code>## (0, 3)</code></pre>
+<pre><code>## (1.2, 2.1)</code></pre>
+<pre><code>## (0, 3)</code></pre>
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-46-1.png" /><!-- --></p>
+<p>In our above implementation we had a fixed step-size <span class="math inline">\(n_k\)</span>. In machine learning, this is called the <strong>learning rate</strong>. You’ll notice this is contrary to the algorithm in the aforementioned pseudocode. Making the assumption of the fixed learning rate made the implementation easier but could yield the issues mentioned in the beginning of the chapter.</p>
+</div>
+<div id="adaptive-step-size" class="section level3">
+<h3><span class="header-section-number">6.6.2</span> Adaptive Step-Size</h3>
+<p>One means of overcoming this issue is to use adaptive step-sizes. This can be done using scipy’s fmin function to find the optimal step-size at each iteration.</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="im">from</span> scipy <span class="im">import</span> stats
+<span class="im">from</span> scipy.optimize <span class="im">import</span> fmin
+
+<span class="co"># we setup this function to pass into the fmin algorithm</span>
+<span class="kw">def</span> f2(n,x,s):
+    x <span class="op">=</span> x <span class="op">+</span> n<span class="op">*</span>s
+    <span class="cf">return</span> f(x)
+
+x_old <span class="op">=</span> <span class="dv">0</span>
+x_new <span class="op">=</span> <span class="dv">2</span> <span class="co"># The algorithm starts at x=2</span>
+precision <span class="op">=</span> <span class="fl">0.0001</span>
+
+x_list, y_list <span class="op">=</span> [x_new], [f(x_new)]
+
+<span class="co"># returns the value of the derivative of our function</span>
+<span class="kw">def</span> f_prime(x):
+    <span class="cf">return</span> <span class="dv">3</span><span class="op">*</span>x<span class="op">**</span><span class="dv">2-4</span><span class="op">*</span>x
+
+<span class="cf">while</span> <span class="bu">abs</span>(x_new <span class="op">-</span> x_old) <span class="op">&gt;</span> precision:
+    x_old <span class="op">=</span> x_new
+    s_k <span class="op">=</span> <span class="op">-</span>f_prime(x_old)
+    
+    <span class="co"># use scipy fmin function to find ideal step size. </span>
+    <span class="co"># Uses the downhill simplex algorithm which is a zero-order method</span>
+    n_k <span class="op">=</span> fmin(f2,<span class="fl">0.1</span>,(x_old,s_k), full_output <span class="op">=</span> <span class="va">False</span>, disp <span class="op">=</span> <span class="va">False</span>)
+
+    x_new <span class="op">=</span> x_old <span class="op">+</span> n_k <span class="op">*</span> s_k
+    x_list.append(x_new)
+    y_list.append(f(x_new))
+    
+<span class="bu">print</span>(<span class="st">&quot;Local minimum occurs at &quot;</span>, <span class="bu">float</span>(x_new))</code></pre>
+<pre><code>## Local minimum occurs at  1.3333333284505209</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="st">&quot;Number of steps:&quot;</span>, <span class="bu">len</span>(x_list))</code></pre>
+<pre><code>## Number of steps: 4</code></pre>
+<p>So we can see that using the adaptive step-sizes, we’ve reduced the number of iterations to convergence from 17 to 4. This is a substantial reduction, however, it must be noted that it takes time to compute the appropriate step-size at each iterations. This highlights a major issue in the decision making for optimisation: <em>trying to find the balance between speed and accuracy</em>.</p>
+<p>How did the modified algorithm look step by step?</p>
+<p>Well we can see that it converges rapidly and after the first two iterations, we need to zoom in to see further improvements.</p>
+<pre><code>## (-1, 2.5)</code></pre>
+<pre><code>## (1.2, 2.1)</code></pre>
+<pre><code>## (0, 3)</code></pre>
+<pre><code>## (1.3333, 1.3335)</code></pre>
+<pre><code>## (0, 3)</code></pre>
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-48-1.png" /><!-- --></p>
+</div>
+<div id="decreasing-step-size" class="section level3">
+<h3><span class="header-section-number">6.6.3</span> Decreasing Step-Size</h3>
+<p>Instead of using computational resources having to find an optimal step-size at each iteration, we could apply an dampening factor at each step to reduce the step-size over time. For example:
+<span class="math display">\[
+\eta(t + 1) = \dfrac{\eta(t)}{1 + t \times d}
+\]</span></p>
+<pre class="sourceCode python"><code class="sourceCode python">
+x_old <span class="op">=</span> <span class="dv">0</span>
+x_new <span class="op">=</span> <span class="dv">2</span> <span class="co"># The algorithm starts at x=2</span>
+n_k <span class="op">=</span> <span class="fl">0.17</span> <span class="co"># step size</span>
+precision <span class="op">=</span> <span class="fl">0.0001</span>
+t, d <span class="op">=</span> <span class="dv">0</span>, <span class="dv">1</span>
+
+x_list, y_list <span class="op">=</span> [x_new], [f(x_new)]
+
+<span class="co"># returns the value of the derivative of our function</span>
+<span class="kw">def</span> f_prime(x):
+    <span class="cf">return</span> <span class="dv">3</span><span class="op">*</span>x<span class="op">**</span><span class="dv">2-4</span><span class="op">*</span>x
+ 
+<span class="cf">while</span> <span class="bu">abs</span>(x_new <span class="op">-</span> x_old) <span class="op">&gt;</span> precision:
+    x_old <span class="op">=</span> x_new
+    s_k <span class="op">=</span> <span class="op">-</span>f_prime(x_old)
+    x_new <span class="op">=</span> x_old <span class="op">+</span> n_k <span class="op">*</span> s_k
+    x_list.append(x_new)
+    y_list.append(f(x_new))
+    n_k <span class="op">=</span> n_k <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> t <span class="op">*</span> d)
+    t <span class="op">+=</span> <span class="dv">1</span>
+
+<span class="bu">print</span>(<span class="st">&quot;Local minimum occurs at:&quot;</span>, x_new)</code></pre>
+<pre><code>## Local minimum occurs at: 1.3308506740900838</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="st">&quot;Number of steps:&quot;</span>, <span class="bu">len</span>(x_list))</code></pre>
+<pre><code>## Number of steps: 6</code></pre>
+<p>We can now see that we’ve still reduced the number of iterations required substantially but are not bounding to finding an optimal step-size at each iteration. This highlights that trade-off of finding cheap improvements that improve convergence at <strong>minimal cost</strong>.</p>
+<p>How Do We Use the Gradient Descent in Linear Regression?</p>
+<p>While using these line methods to find the minima of basic functions is interesting, one might wonder how this relates to some of the regressions we are interested in performing. Let us consider a slightly more complicated example. In this data set, we have data relating to how temperature affects the noise produced by crickets. Specifically, the data is a number of observations or samples of cricket chirp rates at various temperatures.</p>
+<pre><code>## (13, 21)</code></pre>
+<pre><code>## (65, 95)</code></pre>
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-50-1.png" /><!-- --></p>
+<p>What can we deduce from the plotted data?</p>
+<p>We can see that the data set is exhibiting a linear relationship. Therefore, our aim is to find the equation of the straight line given by:
+<span class="math display">\[
+h_\theta(x) = \theta_0 + \theta_1 x, 
+\]</span>
+that best fits all of our data points, i.e. minimise the residual error.</p>
+<p>The function that we are trying to minimize in this case is:</p>
+<p><span class="math inline">\(J(\theta_0,\theta_1) = {1 \over 2m} \sum\limits_{i=1}^m (h_\theta(x_i)-y_i)^2\)</span></p>
+<p>In this case, our gradient will be defined in two dimensions:</p>
+<p><span class="math inline">\(\frac{\partial}{\partial \theta_0} J(\theta_0,\theta_1) = \frac{1}{m} \sum\limits_{i=1}^m (h_\theta(x_i)-y_i)\)</span></p>
+<p><span class="math inline">\(\frac{\partial}{\partial \theta_1} J(\theta_0,\theta_1) = \frac{1}{m} \sum\limits_{i=1}^m ((h_\theta(x_i)-y_i) \cdot x_i)\)</span></p>
+<p>Below, we set up our function for h, J and the gradient:</p>
+<pre class="sourceCode python"><code class="sourceCode python">h <span class="op">=</span> <span class="kw">lambda</span> theta_0,theta_1,x: theta_0 <span class="op">+</span> theta_1<span class="op">*</span>x
+
+<span class="kw">def</span> J(x,y,m,theta_0,theta_1):
+    returnValue <span class="op">=</span> <span class="dv">0</span>
+    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(m):
+        returnValue <span class="op">+=</span> (h(theta_0,theta_1,x[i])<span class="op">-</span>y[i])<span class="op">**</span><span class="dv">2</span>
+    returnValue <span class="op">=</span> returnValue<span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>m)
+    <span class="cf">return</span> returnValue
+
+<span class="kw">def</span> grad_J(x,y,m,theta_0,theta_1):
+    returnValue <span class="op">=</span> np.array([<span class="fl">0.</span>,<span class="fl">0.</span>])
+    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(m):
+        returnValue[<span class="dv">0</span>] <span class="op">+=</span> (h(theta_0,theta_1,x[i])<span class="op">-</span>y[i])
+        returnValue[<span class="dv">1</span>] <span class="op">+=</span> (h(theta_0,theta_1,x[i])<span class="op">-</span>y[i])<span class="op">*</span>x[i]
+    returnValue <span class="op">=</span> returnValue<span class="op">/</span>(m)
+    <span class="cf">return</span> returnValue</code></pre>
+<!----
+Now that we've got our functions defined, let's assign the correct data to the $x$ and $y$ variables:
+
+---->
+<pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> time
+start <span class="op">=</span> time.time()
+theta_old <span class="op">=</span> np.array([<span class="fl">0.</span>,<span class="fl">0.</span>])
+theta_new <span class="op">=</span> np.array([<span class="fl">1.</span>,<span class="fl">1.</span>]) <span class="co"># The algorithm starts at [1,1]</span>
+n_k <span class="op">=</span> <span class="fl">0.001</span> <span class="co"># step size</span>
+precision <span class="op">=</span> <span class="fl">0.001</span>
+num_steps <span class="op">=</span> <span class="dv">0</span>
+s_k <span class="op">=</span> <span class="bu">float</span>(<span class="st">&quot;inf&quot;</span>)
+
+<span class="cf">while</span> np.linalg.norm(s_k) <span class="op">&gt;</span> precision:
+    num_steps <span class="op">+=</span> <span class="dv">1</span>
+    theta_old <span class="op">=</span> theta_new
+    s_k <span class="op">=</span> <span class="op">-</span>grad_J(x,y,m,theta_old[<span class="dv">0</span>],theta_old[<span class="dv">1</span>])
+    theta_new <span class="op">=</span> theta_old <span class="op">+</span> n_k <span class="op">*</span> s_k
+
+<span class="bu">print</span>(<span class="st">&quot;Local minimum occurs where:&quot;</span>)</code></pre>
+<pre><code>## Local minimum occurs where:</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="st">&quot;theta_0 =&quot;</span>, theta_new[<span class="dv">0</span>])</code></pre>
+<pre><code>## theta_0 = 25.128552558595363</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="st">&quot;theta_1 =&quot;</span>, theta_new[<span class="dv">1</span>])</code></pre>
+<pre><code>## theta_1 = 3.297264756251897</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="st">&quot;This took&quot;</span>,num_steps,<span class="st">&quot;steps to converge&quot;</span>)</code></pre>
+<pre><code>## This took 565859 steps to converge</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python">end <span class="op">=</span> time.time()
+<span class="bu">print</span>(<span class="bu">str</span>(end <span class="op">-</span> start) <span class="op">+</span> <span class="st">&#39;seconds&#39;</span>)</code></pre>
+<pre><code>## 20.08639121055603seconds</code></pre>
+<p>It’s clear that the algorithm seems to take quite a long time for such a trivial example. Let’s check that the values we’ve obtained from the gradient descent are any good. We can get the true values for <span class="math inline">\(\theta_0\)</span> and <span class="math inline">\(\theta_1\)</span> with the following:</p>
+<pre class="sourceCode python"><code class="sourceCode python">
+<span class="im">from</span> scipy <span class="im">import</span> stats <span class="im">as</span> sp
+start <span class="op">=</span> time.time()
+actualvalues <span class="op">=</span> sp.stats.linregress(x,y)
+<span class="bu">print</span>(<span class="st">&quot;Actual values for theta are:&quot;</span>)</code></pre>
+<pre><code>## Actual values for theta are:</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="st">&quot;theta_0 =&quot;</span>, actualvalues.intercept)</code></pre>
+<pre><code>## theta_0 = 25.232304983426026</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span>(<span class="st">&quot;theta_1 =&quot;</span>, actualvalues.slope)</code></pre>
+<pre><code>## theta_1 = 3.2910945679475647</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python">end <span class="op">=</span> time.time()
+<span class="bu">print</span>(<span class="bu">str</span>(end <span class="op">-</span> start) <span class="op">+</span> <span class="st">&#39;seconds&#39;</span>)</code></pre>
+<pre><code>## 0.01975536346435547seconds</code></pre>
+<p>One thing this highlights is how much effort goes into optimising the functions found in these libraries. If one looks at the code inside linregress, clever exploitations to speed up the computation can be found.</p>
+<p>Now, let’s plot our obtained results on the original data set:</p>
+<pre><code>## (13, 21)</code></pre>
+<pre><code>## (65, 95)</code></pre>
+<p><img src="OptimisationII_notes_files/figure-html/unnamed-chunk-55-1.png" /><!-- -->
+So in our implementation above, we needed to compute the gradient at each step. While this might not seem important, it is! In this toy example, we only have 15 data points, however, imagine the computational intractability when millions of data points are involved.</p>
+</div>
+<div id="stochastic-gradient-descent" class="section level3">
+<h3><span class="header-section-number">6.6.4</span> Stochastic Gradient Descent</h3>
+<p>What we implemented above is often called Vanilla/Batch gradient descent. As pointed out, this implementation means that we need to sum the cost of each sample in order to calculate the gradient of the cost function. This means given 3 million samples, we would have to loop through 3 million times!</p>
+<blockquote>
+<p>So to move a single step towards the minimum, one would need to calculate each cost 3 million times.</p>
+</blockquote>
+<p>So what can we do to overcome this? Well, we can use the stochastic gradient descent. In this idea, we use the cost gradient of 1 sample at each iteration rather than the sum of the cost gradient of all samples. So recall our gradient equations from above:</p>
+<p><span class="math display">\[\frac{\partial}{\partial \theta_0} J(\theta_0,\theta_1) = \frac{1}{m} \sum\limits_{i=1}^m (h_\theta(x_i)-y_i),\]</span></p>
+<p><span class="math display">\[\frac{\partial}{\partial \theta_1} J(\theta_0,\theta_1) = \frac{1}{m} \sum\limits_{i=1}^m ((h_\theta(x_i)-y_i) \cdot x_i),\]</span>
+where:
+<span class="math display">\[
+h_\theta(x) = \theta_0 + \theta_1 x.
+\]</span>
+We now want to update our values at each item in the training set instead of all so that we can begin improvement straight away.</p>
+<p>We can redefine our algorithm into the stochastic gradient descent for the simple linear regression as follows:</p>
+<pre><code>Randomly shuffle the data set
+ for k = 0, 1, 2, ... do
+     for i = 1 to m do</code></pre>
+<p><span class="math display">\[
+\begin{bmatrix} \theta_0 \\ \theta_1\end{bmatrix} = \begin{bmatrix} \theta_0 \\ \theta_1\end{bmatrix} - \alpha\begin{bmatrix} 2(h_\theta(x_i) - y_i) \\ 2x_i(h_\theta(x_i) - y_i)\end{bmatrix}
+\]</span></p>
+<pre><code>     end for
+ end for</code></pre>
+<p>Depending on the size of the data set, we run the entire data set 1 to <span class="math inline">\(k\)</span> times.</p>
+<p>So the key advantage here is that unlike batch gradient descent where we have to go through the entire data set before initiating any progress, we can now make process straight away as we move through the data set. This is the primary reason why stochastic gradient descent is used when dealing with large data sets.</p>
+<div id="additional-example" class="section level4">
+<h4><span class="header-section-number">6.6.4.1</span> Additional Example</h4>
+<p>Let us look at another example with the use of stochastic gradient descent for linear regression. We can create a set of 500 000 data points around the equation <span class="math inline">\(y = 2x + 17 + \epsilon\)</span> on the domain <span class="math inline">\(x \in [0, 100]\)</span>.</p>
+<p><em>Show in jupyter notebook - example breaks rstudio!</em></p>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="multivariate-unconstrained-optimisation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="newton-and-quasi-newton-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/06-gradient_methods_for_unconstrained_optimisation.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["OptimisationII_notes.pdf", "OptimisationII_notes.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
